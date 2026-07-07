@@ -36,7 +36,7 @@ def clinical_reasoning_node(state: ClinicalState) -> ClinicalState:
 
 
 def urgency_node(state: ClinicalState) -> ClinicalState:
-    state["urgency"] = get_urgency(state["symptoms"])
+    state["urgency"] = get_urgency(state["symptoms"], state.get("analysis", ""))
     return state
 
 

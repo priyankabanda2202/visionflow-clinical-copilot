@@ -28,6 +28,7 @@ Triage: {p['urgency']}
 Question: {question}
 
 Respond in clear, authoritative clinical language. Plain text only — no markdown or asterisks.
-Be concise and actionable.
+Be concise and actionable. Remind the physician to correlate with examination findings.
+Do not invent test results not present in the case.
 """
     return clean_clinical_text(chat(prompt))

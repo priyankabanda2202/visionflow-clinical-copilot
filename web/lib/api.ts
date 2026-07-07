@@ -5,6 +5,16 @@ export type Patient = {
   symptoms: string;
   diagnosis: string | null;
   urgency: string | null;
+  doctor_report?: string | null;
+  patient_education?: string | null;
+};
+
+export type PriorityCase = {
+  id: number;
+  name: string;
+  age: number;
+  urgency: string;
+  symptoms: string;
 };
 
 export type DailyBrief = {
@@ -12,6 +22,8 @@ export type DailyBrief = {
   red: number;
   yellow: number;
   green: number;
+  narrative: string;
+  priority_cases: PriorityCase[];
 };
 
 export type HealthInfo = {

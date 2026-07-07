@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from agents.copilot_agent import answer as copilot_answer
+from agents.daily_brief_agent import build_daily_brief
 from agents.text_format import clean_clinical_text
 from backend.schemas import (
     CopilotRequest,
@@ -24,7 +25,7 @@ from backend.schemas import (
     IntakeResponse,
     PatientOut,
 )
-from database.crud import create_patient
+from database.crud import create_patient, patient_with_reports
 from database.db import Base, SessionLocal, engine
 from database.models import Patient
 from workflows.clinical_workflow import run_clinical_workflow
@@ -42,13 +43,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+URGENCY_ORDER = {"RED": 0, "YELLOW": 1, "GREEN": 2}
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+static_dir = ROOT / "web" / "out"
 
 
 def seed_if_empty(db: Session):
@@ -58,14 +55,12 @@ def seed_if_empty(db: Session):
 
 
 def valid_patients(db: Session):
-    return (
+    patients = (
         db.query(Patient)
         .filter(Patient.diagnosis.isnot(None), Patient.urgency.isnot(None))
         .all()
     )
-
-
-static_dir = ROOT / "web" / "out"
+    return sorted(patients, key=lambda p: URGENCY_ORDER.get(p.urgency or "GREEN", 3))
 
 
 @app.on_event("startup")
@@ -99,7 +94,7 @@ def health():
 def list_patients():
     db = SessionLocal()
     try:
-        return valid_patients(db)
+        return [patient_with_reports(db, p) for p in valid_patients(db)]
     finally:
         db.close()
 
@@ -111,7 +106,7 @@ def get_patient(patient_id: int):
         patient = db.query(Patient).filter(Patient.id == patient_id).first()
         if not patient:
             raise HTTPException(status_code=404, detail="Patient not found")
-        return patient
+        return patient_with_reports(db, patient)
     finally:
         db.close()
 
@@ -120,11 +115,7 @@ def get_patient(patient_id: int):
 def daily_brief():
     db = SessionLocal()
     try:
-        patients = valid_patients(db)
-        red = len([p for p in patients if p.urgency == "RED"])
-        yellow = len([p for p in patients if p.urgency == "YELLOW"])
-        green = len([p for p in patients if p.urgency == "GREEN"])
-        return DailyBrief(total=len(patients), red=red, yellow=yellow, green=green)
+        return build_daily_brief(db)
     finally:
         db.close()
 
@@ -135,6 +126,9 @@ def intake(body: IntakeRequest):
     try:
         result = run_clinical_workflow(body.name, body.age, body.symptoms)
         analysis = clean_clinical_text(result["analysis"])
+        doctor_report = clean_clinical_text(result.get("doctor_report", ""))
+        patient_education = clean_clinical_text(result.get("patient_education", ""))
+
         patient = create_patient(
             db,
             body.name,
@@ -142,12 +136,18 @@ def intake(body: IntakeRequest):
             body.symptoms,
             analysis,
             result["urgency"],
+            doctor_report=doctor_report,
+            patient_education=patient_education,
         )
+        patient_data = patient_with_reports(db, patient)
+
         return IntakeResponse(
             summary=result["summary"],
             analysis=analysis,
             urgency=result["urgency"],
-            patient=patient,
+            doctor_report=doctor_report,
+            patient_education=patient_education,
+            patient=PatientOut(**patient_data),
         )
     except Exception as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
