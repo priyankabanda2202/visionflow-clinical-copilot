@@ -47,6 +47,21 @@ start-api.bat
 start-web.bat
 ```
 
+### PowerShell (note the `.\` prefix)
+
+```powershell
+cd C:\Users\admin\Downloads\myeyesai-clinical-copilot
+.\start-api.ps1
+.\start-web.ps1
+```
+
+Or batch files from PowerShell:
+
+```powershell
+.\start-api.bat
+.\start-web.bat
+```
+
 > Both terminals must run at the same time. The UI talks to the API on port 8000.
 
 ## Deploy to Render
