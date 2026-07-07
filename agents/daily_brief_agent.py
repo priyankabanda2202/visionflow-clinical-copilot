@@ -13,7 +13,7 @@ def generate_daily_brief(db: Session):
     )
 
     return f"""
-Good Morning Dr Carl
+Good Morning, Clinical Director
 
 Total Patients:
 {total}

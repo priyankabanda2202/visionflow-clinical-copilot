@@ -1,21 +1,50 @@
-# MyEyesAI Clinical Copilot
+# VisionFlow Clinical Copilot
 
-Streamlit demo for ophthalmology clinical workflows.
+Real-time **ophthalmology clinical intelligence platform** — Next.js 15 frontend + FastAPI backend + LangGraph multi-agent pipeline + Ollama/Groq LLM.
+
+> Fictional product name for portfolio demo. No affiliation with any commercial client.
+
+## Stack
+
+| Layer | Tech |
+|-------|------|
+| Frontend | **Next.js 15**, React 19, TypeScript, Tailwind CSS, Recharts |
+| Backend | **FastAPI**, WebSockets (real-time assistant) |
+| AI | **LangGraph**, Groq (cloud) / Ollama (local) |
+| Database | SQLAlchemy, SQLite |
+
+## Live Demo
+
+https://visionflow-clinical-copilot.onrender.com/
 
 ## Run locally
 
+### Backend + Frontend (production-like)
+
 ```bash
-python -m venv venv
-source venv/bin/activate  # Windows: .\venv\Scripts\Activate.ps1
+# Terminal 1 — API
 pip install -r requirements.txt
+ollama serve   # optional if using Groq
+uvicorn backend.main:app --reload --port 8000
+
+# Terminal 2 — Next.js dev UI
+cd web
+npm install
+npm run dev
+```
+
+Open http://localhost:3000 — set `NEXT_PUBLIC_API_URL=http://localhost:8000` in `web/.env.local`
+
+### Legacy Streamlit UI (deprecated)
+
+```bash
 streamlit run frontend/app.py
 ```
 
-## Deploy (24/7 public link)
+## Deploy (Render)
 
-1. Push this repo to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. New app → select repo → Main file: `frontend/app.py`
-4. Deploy → share the `*.streamlit.app` URL
+See `docs/DEPLOY.md`
 
-Set secrets (optional): `LLM_MODE=mock` for free demo mode.
+## Author
+
+Priyanka Banda — GenAI Architect

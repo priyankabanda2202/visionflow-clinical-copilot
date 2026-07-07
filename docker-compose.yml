@@ -26,8 +26,8 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: myeyesai
-      POSTGRES_PASSWORD: myeyesai
+      POSTGRES_USER: visionflow
+      POSTGRES_PASSWORD: visionflow
       POSTGRES_DB: clinical_copilot
     ports:
       - "5432:5432"

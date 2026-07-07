@@ -166,7 +166,7 @@ def render_header():
         f"""
 <div class="clinical-header">
   <div>
-    <h1>MyEyesAI Clinical Copilot</h1>
+    <h1>VisionFlow Clinical Copilot</h1>
     <div class="sub">Ophthalmology Decision Support · Live Clinical Console</div>
   </div>
   <div class="live-badge"><span class="live-dot"></span> LIVE · {now}</div>
