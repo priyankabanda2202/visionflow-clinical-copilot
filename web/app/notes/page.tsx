@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Panel from "@/components/Panel";
+import ClinicalText from "@/components/ClinicalText";
 import UrgencyBadge from "@/components/UrgencyBadge";
 import { fetchPatients, Patient } from "@/lib/api";
 
@@ -25,6 +26,9 @@ export default function NotesPage() {
 
   return (
     <div className="animate-fade-up space-y-6">
+      <p className="text-sm text-[#6b8cb8]">
+        Structured clinical notes for all active cases in the caseload.
+      </p>
       {patients.map((p) => (
         <div key={p.id} className="glass p-6">
           <div className="flex items-center justify-between">
@@ -36,7 +40,7 @@ export default function NotesPage() {
           <div className="mt-4 grid grid-cols-2 gap-4">
             <Panel title="Chief Complaint">{p.symptoms}</Panel>
             <Panel title="Assessment">
-              <pre className="whitespace-pre-wrap">{p.diagnosis}</pre>
+              <ClinicalText text={p.diagnosis} />
             </Panel>
           </div>
         </div>

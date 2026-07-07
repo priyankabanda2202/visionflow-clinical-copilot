@@ -19,7 +19,7 @@ export default function ClinicalHeader() {
           VisionFlow Clinical Copilot
         </h1>
         <p className="mt-1 text-sm text-[#7a9bc4]">
-          Ophthalmology Decision Support · Live Clinical Console
+          Ophthalmology Clinical Decision Support · Physician Review Console
         </p>
       </div>
       <div className="inline-flex items-center gap-2 rounded-full border border-live/35 bg-live/10 px-3 py-1.5 text-xs font-semibold text-live">

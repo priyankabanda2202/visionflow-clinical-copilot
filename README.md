@@ -19,29 +19,35 @@ Real-time **ophthalmology clinical intelligence platform** — Next.js 15 fronte
 
 Deployed as FastAPI + Next.js static export (single service on Render).
 
-## Run locally (Windows)
+## Run locally (Windows PowerShell)
 
-### Step 1 — API (project root)
+PowerShell requires `.\` before scripts in the current folder.
 
-Double-click **`start-api.bat`** or:
+### Terminal 1 — API
 
-```cmd
+```powershell
 cd C:\Users\admin\Downloads\myeyesai-clinical-copilot
-start-api.bat
+.\start-api.ps1
 ```
 
-### Step 2 — UI (project root OR web folder)
+### Terminal 2 — UI
 
-Double-click **`start-web.bat`** or from `web` folder run **`start.bat`**:
-
-```cmd
+```powershell
 cd C:\Users\admin\Downloads\myeyesai-clinical-copilot
-start-web.bat
+.\start-web.ps1
 ```
 
 Open **http://localhost:3000**
 
-> Both must run at the same time. The UI proxies API calls to port 8000 automatically.
+### CMD alternative
+
+```cmd
+cd C:\Users\admin\Downloads\myeyesai-clinical-copilot
+start-api.bat
+start-web.bat
+```
+
+> Both terminals must run at the same time. The UI talks to the API on port 8000.
 
 ## Deploy to Render
 

@@ -1,4 +1,5 @@
 from agents.ollama_client import chat
+from agents.text_format import clean_clinical_text
 
 
 def _fields(patient):
@@ -26,6 +27,7 @@ Triage: {p['urgency']}
 
 Question: {question}
 
-Respond in clear, authoritative clinical language. Be concise and actionable.
+Respond in clear, authoritative clinical language. Plain text only — no markdown or asterisks.
+Be concise and actionable.
 """
-    return chat(prompt)
+    return clean_clinical_text(chat(prompt))

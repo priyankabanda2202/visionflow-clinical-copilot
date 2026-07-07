@@ -1,19 +1,26 @@
 from agents.ollama_client import chat
+from agents.text_format import clean_clinical_text
 
 
 def analyze_patient(summary):
     prompt = f"""
-You are a senior ophthalmology clinical reasoning engine.
+You are a senior ophthalmology clinical reasoning engine supporting attending physicians.
 
 Patient presentation:
 {summary}
 
-Provide a structured clinical assessment with:
+Write a structured clinical assessment in plain text only.
+Rules:
+- Do NOT use markdown, asterisks, hashtags, or bullet symbols
+- Use numbered sections with clear headings on their own line
+- Use blank lines between sections
+- Write in concise, professional clinical language
+
+Required sections:
 1. Primary Diagnosis
 2. Differential Diagnosis
 3. Recommended Workup
-4. Clinical Confidence (percentage)
-
-Write in concise clinical language for an attending physician.
+4. Clinical Confidence (percentage with brief rationale)
+5. Recommendation
 """
-    return chat(prompt)
+    return clean_clinical_text(chat(prompt))

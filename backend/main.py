@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from agents.copilot_agent import answer as copilot_answer
+from agents.text_format import clean_clinical_text
 from backend.schemas import (
     CopilotRequest,
     CopilotResponse,
@@ -133,17 +134,18 @@ def intake(body: IntakeRequest):
     db = SessionLocal()
     try:
         result = run_clinical_workflow(body.name, body.age, body.symptoms)
+        analysis = clean_clinical_text(result["analysis"])
         patient = create_patient(
             db,
             body.name,
             body.age,
             body.symptoms,
-            result["analysis"],
+            analysis,
             result["urgency"],
         )
         return IntakeResponse(
             summary=result["summary"],
-            analysis=result["analysis"],
+            analysis=analysis,
             urgency=result["urgency"],
             patient=patient,
         )

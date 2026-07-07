@@ -68,8 +68,11 @@ export default function Sidebar() {
         })}
       </nav>
       <div className="space-y-1 text-xs text-slate-500">
-        <p>Engine · {engine}</p>
+        <p>AI Engine · {engine}</p>
         {model && <p>Model · {model}</p>}
+        <p className="pt-2 text-[10px] uppercase tracking-wider text-slate-600">
+          Stakeholder preview
+        </p>
       </div>
     </aside>
   );

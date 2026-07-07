@@ -1,5 +1,6 @@
 import Sidebar from "@/components/Sidebar";
 import ClinicalHeader from "@/components/ClinicalHeader";
+import DemoBanner from "@/components/DemoBanner";
 import "./globals.css";
 
 export const metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Sidebar />
         <main className="ml-64 min-h-screen p-8">
           <ClinicalHeader />
+          <DemoBanner />
           {children}
         </main>
       </body>

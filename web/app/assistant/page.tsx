@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Panel from "@/components/Panel";
+import ClinicalText from "@/components/ClinicalText";
 import UrgencyBadge from "@/components/UrgencyBadge";
 import { askCopilot, fetchPatients, Patient } from "@/lib/api";
 
@@ -41,10 +42,7 @@ export default function AssistantPage() {
     } catch (err: any) {
       setMessages((m) => [
         ...m,
-        {
-          role: "assistant",
-          content: `LLM unavailable: ${err.message}\n\nLocal: ollama serve · Cloud: set GROQ_API_KEY`,
-        },
+        { role: "assistant", content: `Unable to reach clinical engine: ${err.message}` },
       ]);
     } finally {
       setThinking(false);
@@ -52,11 +50,7 @@ export default function AssistantPage() {
   }
 
   if (error && !patients.length) {
-    return (
-      <div className="glass p-6 text-red-300">
-        {error} — run <code>start-api.bat</code> from project root.
-      </div>
-    );
+    return <div className="glass p-6 text-red-300">{error}</div>;
   }
 
   if (!patients.length) {
@@ -64,7 +58,7 @@ export default function AssistantPage() {
   }
 
   return (
-    <div className="animate-fade-up grid h-[calc(100vh-12rem)] grid-cols-[340px_1fr] gap-6">
+    <div className="animate-fade-up grid h-[calc(100vh-14rem)] grid-cols-[340px_1fr] gap-6">
       <div className="glass flex flex-col p-5">
         <h3 className="font-medium text-white">Active Case</h3>
         <select
@@ -84,13 +78,8 @@ export default function AssistantPage() {
         {selected && (
           <div className="mt-4 space-y-3">
             <Panel title="Case Context">
-              <p>
-                <strong>Age:</strong> {selected.age}
-              </p>
-              <p className="mt-2">
-                <strong>Presentation:</strong>
-              </p>
-              <p className="mt-1">{selected.symptoms}</p>
+              <p>Age: {selected.age}</p>
+              <p className="mt-2">Presentation: {selected.symptoms}</p>
             </Panel>
             <UrgencyBadge urgency={selected.urgency} />
           </div>
@@ -100,8 +89,10 @@ export default function AssistantPage() {
       <div className="glass flex flex-col overflow-hidden">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <div>
-            <h2 className="font-semibold text-white">Real-time Clinical Assistant</h2>
-            <p className="text-xs text-[#6b8cb8]">LLM-powered case consultation</p>
+            <h2 className="font-semibold text-white">Clinical Assistant</h2>
+            <p className="text-xs text-[#6b8cb8]">
+              Ask follow-up questions about the selected case
+            </p>
           </div>
           <button
             onClick={() => setMessages([])}
@@ -112,11 +103,17 @@ export default function AssistantPage() {
         </div>
         <div className="flex-1 space-y-4 overflow-y-auto p-5">
           {messages.length === 0 && (
-            <p className="text-sm text-[#6b8cb8]">Ask about this case…</p>
+            <p className="text-sm text-[#6b8cb8]">
+              Example: What workup would you prioritize for this presentation?
+            </p>
           )}
           {messages.map((m, i) => (
             <div key={i} className={m.role === "user" ? "chat-user" : "chat-assistant"}>
-              <pre className="whitespace-pre-wrap font-sans">{m.content}</pre>
+              {m.role === "assistant" ? (
+                <ClinicalText text={m.content} />
+              ) : (
+                <span>{m.content}</span>
+              )}
             </div>
           ))}
           {thinking && (

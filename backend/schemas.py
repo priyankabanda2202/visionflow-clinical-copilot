@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+
+from agents.text_format import clean_clinical_text
 
 
 class PatientOut(BaseModel):
@@ -12,6 +14,11 @@ class PatientOut(BaseModel):
     class Config:
         from_attributes = True
 
+    @field_validator("diagnosis")
+    @classmethod
+    def strip_markdown(cls, value: str | None) -> str | None:
+        return clean_clinical_text(value) if value else value
+
 
 class IntakeRequest(BaseModel):
     name: str
@@ -24,6 +31,11 @@ class IntakeResponse(BaseModel):
     analysis: str
     urgency: str
     patient: PatientOut
+
+    @field_validator("analysis")
+    @classmethod
+    def strip_markdown(cls, value: str) -> str:
+        return clean_clinical_text(value)
 
 
 class DailyBrief(BaseModel):
@@ -40,3 +52,8 @@ class CopilotRequest(BaseModel):
 
 class CopilotResponse(BaseModel):
     answer: str
+
+    @field_validator("answer")
+    @classmethod
+    def strip_markdown(cls, value: str) -> str:
+        return clean_clinical_text(value)

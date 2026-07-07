@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Panel from "@/components/Panel";
+import ClinicalText from "@/components/ClinicalText";
 import UrgencyBadge from "@/components/UrgencyBadge";
 import { submitIntake } from "@/lib/api";
 
@@ -36,9 +37,7 @@ export default function IntakePage() {
       const data = await submitIntake({ name, age, symptoms });
       setResult(data);
     } catch (err: any) {
-      setError(
-        `${err.message}\n\nLocal: start Ollama (ollama serve)\nCloud: set GROQ_API_KEY on Render`
-      );
+      setError(err.message);
     } finally {
       clearInterval(timer);
       setLoading(false);
@@ -49,7 +48,10 @@ export default function IntakePage() {
   return (
     <div className="animate-fade-up grid grid-cols-2 gap-8">
       <div className="glass p-6">
-        <h2 className="text-lg font-semibold text-white">New Presentation</h2>
+        <h2 className="text-lg font-semibold text-white">New Patient Presentation</h2>
+        <p className="mt-1 text-sm text-[#6b8cb8]">
+          Enter case details to run the multi-agent clinical pipeline.
+        </p>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <input
             className="w-full rounded-lg border border-border bg-canvas px-4 py-3 text-white outline-none focus:border-accent"
@@ -68,7 +70,7 @@ export default function IntakePage() {
           />
           <textarea
             className="h-32 w-full rounded-lg border border-border bg-canvas px-4 py-3 text-white outline-none focus:border-accent"
-            placeholder="Chief complaint"
+            placeholder="Chief complaint (e.g. blurry vision, eye pain, floaters)"
             value={symptoms}
             onChange={(e) => setSymptoms(e.target.value)}
             required
@@ -104,7 +106,7 @@ export default function IntakePage() {
         )}
 
         {!loading && error && (
-          <pre className="mt-6 whitespace-pre-wrap text-sm text-red-400">{error}</pre>
+          <p className="mt-6 text-sm text-red-400">{error}</p>
         )}
 
         {!loading && !error && !result && (
@@ -114,10 +116,10 @@ export default function IntakePage() {
         {!loading && result && (
           <div className="mt-6 space-y-4">
             <Panel title="Presentation Summary">
-              <pre className="whitespace-pre-wrap">{result.summary}</pre>
+              <ClinicalText text={result.summary} />
             </Panel>
             <Panel title="Clinical Assessment">
-              <pre className="whitespace-pre-wrap">{result.analysis}</pre>
+              <ClinicalText text={result.analysis} />
             </Panel>
             <UrgencyBadge urgency={result.urgency} />
           </div>
