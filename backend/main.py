@@ -64,13 +64,20 @@ def valid_patients(db: Session):
     )
 
 
+static_dir = ROOT / "web" / "out"
+
+
 @app.on_event("startup")
-def startup():
+def check_frontend():
     db = SessionLocal()
     try:
         seed_if_empty(db)
     finally:
         db.close()
+    if static_dir.exists():
+        print(f"Frontend: serving Next.js from {static_dir}")
+    else:
+        print(f"WARNING: {static_dir} not found — run build.sh before deploy")
 
 
 @app.get("/api/health")
@@ -189,6 +196,5 @@ async def copilot_ws(websocket: WebSocket, patient_id: int):
         db.close()
 
 
-static_dir = ROOT / "web" / "out"
 if static_dir.exists():
     app.mount("/", StaticFiles(directory=str(static_dir), html=True), name="frontend")
