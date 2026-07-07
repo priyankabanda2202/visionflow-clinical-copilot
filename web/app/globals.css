@@ -162,3 +162,41 @@ body {
     display: none !important;
   }
 }
+
+/* LinkedIn / social in-app browsers — often fake desktop viewport width */
+html.force-mobile .vf-desktop-nav,
+html.force-mobile aside.vf-desktop-nav,
+html.force-mobile aside.fixed.left-0.top-0.z-20 {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  overflow: hidden !important;
+}
+
+html.force-mobile .vf-mobile-topbar {
+  display: flex !important;
+}
+
+html.force-mobile .vf-bottom-nav {
+  display: block !important;
+}
+
+html.force-mobile main {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  padding-top: 4.25rem !important;
+  padding-bottom: 5rem !important;
+}
+
+html.force-mobile .vf-mobile-drawer:not(.is-open) {
+  transform: translateX(-100%) !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+html.in-app-browser body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}

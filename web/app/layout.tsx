@@ -2,6 +2,7 @@ import Sidebar from "@/components/Sidebar";
 import ClinicalHeader from "@/components/ClinicalHeader";
 import HospitalStatusBar from "@/components/HospitalStatusBar";
 import AppFooter from "@/components/AppFooter";
+import InAppBrowserFix from "@/components/InAppBrowserFix";
 import ColdStartGuard from "@/components/ColdStartGuard";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { BranchProvider } from "@/lib/branchContext";
@@ -21,11 +22,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
         <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta httpEquiv="Pragma" content="no-cache" />
+        {/* Before React: fix LinkedIn / in-app browser layout */}
+        <script src="/mobile-shell.js?v=3" />
       </head>
       <body>
+        <InAppBrowserFix />
         <div className="app-bg" />
         <div className="app-grid" />
         <ColdStartGuard>

@@ -1,3 +1,6 @@
+/mobile-shell.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
 /*
   Prevent stale HTML on Render static — always fetch fresh shell after deploy
 */

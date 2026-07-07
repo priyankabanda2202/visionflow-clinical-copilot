@@ -240,7 +240,7 @@ export default function Sidebar() {
         aria-hidden={!open}
         className={clsx(
           "vf-mobile-drawer fixed left-0 top-0 z-50 flex h-[100dvh] w-[85vw] max-w-[300px] flex-col border-r border-border/60 bg-[#060b14] p-4 shadow-2xl transition-transform duration-300 ease-out md:hidden",
-          open ? "translate-x-0" : "-translate-x-full pointer-events-none invisible"
+          open ? "is-open translate-x-0" : "-translate-x-full pointer-events-none invisible"
         )}
       >
         <SidebarPanel {...panelProps} showClose onClose={closeMenu} />
